@@ -56,7 +56,49 @@ iot-device-identification/
 └── README.md
 ```
 
-## 🚀 Cách chạy
+## 🚀 Hướng dẫn chạy trên Google Colab (Khuyên dùng)
+
+Do đặc thù mô hình Deep Learning (Transformer) cần GPU để chạy nhanh, đây là quy trình chuẩn để huấn luyện trên Colab:
+
+**Bước 1:** Đảm bảo bạn đã nén thư mục dataset thành `dataset.zip` và upload lên thư mục gốc của Google Drive.
+
+**Bước 2:** Mở Google Colab, tạo sổ tay mới, vào `Runtime -> Change runtime type -> Hardware accelerator -> T4 GPU`.
+
+**Bước 3:** Chạy đoạn mã sau trong các cell của Colab:
+
+```python
+# 1. Kết nối với Google Drive của bạn
+from google.colab import drive
+drive.mount('/content/drive')
+
+# 2. Tải mã nguồn dự án từ Github
+!git clone https://github.com/hnihTyoB/IoT.git
+%cd IoT
+
+# 3. Cài đặt các thư viện cần thiết
+!pip install -r requirements.txt
+
+# 4. Giải nén dataset từ Google Drive
+# Lệnh này sẽ giải nén dataset vào /content/dataset (ngang hàng với thư mục IoT hiện tại)
+!unzip -q /content/drive/MyDrive/dataset.zip -d /content/
+
+# Kiểm tra xem dataset đã giải nén đúng chưa
+!ls /content/dataset
+
+# 5. Bắt đầu huấn luyện mô hình (Chạy lần lượt từng Phase)
+!python run_experiments.py --config configs/pretrain_unsw.yaml
+#!python run_experiments.py --config configs/contrastive_unsw.yaml
+#!python run_experiments.py --config configs/finetune_unsw.yaml
+```
+
+Sau khi chạy xong, kết quả sẽ nằm trong `/content/IoT/experiments/`. Bạn có thể dùng lệnh copy để đưa kết quả ngược về Drive:
+```bash
+!cp -r /content/IoT/experiments/ /content/drive/MyDrive/
+```
+
+---
+
+## 💻 Hướng dẫn chạy trên máy tính cá nhân (Dành cho test/debug)
 
 ### 1. Cài đặt
 
