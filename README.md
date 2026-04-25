@@ -60,7 +60,9 @@ iot-device-identification/
 
 Do đặc thù mô hình Deep Learning (Transformer) cần GPU để chạy nhanh, đây là quy trình chuẩn để huấn luyện trên Colab:
 
-**Bước 1:** Đảm bảo bạn đã nén thư mục dataset thành `dataset.zip` và upload lên thư mục gốc của Google Drive.
+**Bước 1: Chuẩn bị dữ liệu**
+- Tải dataset `dataset.zip` từ link Google Drive sau: [Download Dataset](https://drive.google.com/file/d/1ALsVGOSsNgeNA502QJhKw55Qr-ril13p/view?usp=sharing)
+- Upload file `dataset.zip` vừa tải về lên thư mục gốc trên Google Drive cá nhân của bạn.
 
 **Bước 2:** Mở Google Colab, tạo sổ tay mới, vào `Runtime -> Change runtime type -> Hardware accelerator -> T4 GPU`.
 
@@ -108,7 +110,8 @@ pip install -r requirements.txt
 
 ### 2. Chuẩn bị dữ liệu
 
-Đặt 27 file CSV từ UNSW-IoTraffic (flows) vào thư mục `../dataset/`:
+Tải bộ dataset từ [link Google Drive này](https://drive.google.com/file/d/1ALsVGOSsNgeNA502QJhKw55Qr-ril13p/view?usp=sharing).
+Sau khi giải nén, đặt 27 file CSV từ UNSW-IoTraffic vào thư mục `../dataset/`:
 ```
 dataset/
 ├── AmazonEcho_44650d56ccd3_flows.csv
