@@ -255,9 +255,9 @@ def extract_embeddings(
 
             if hasattr(model, "get_embeddings"):
                 emb = model.get_embeddings(features)
-            elif hasattr(model, "encoder"):
+            elif hasattr(model, "reconstruction_head"): # MaskedFeatureModeling
                 emb = model.encoder(features)
-            else:
+            else: # IoTTransformerEncoder
                 emb = model(features)
 
             all_embeddings.append(emb.cpu().numpy())
