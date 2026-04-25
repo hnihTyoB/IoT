@@ -87,7 +87,7 @@ def save_experiment_artifacts(
     # Label map
     if label_map is not None:
         with open(output_dir / "label_map.json", "w") as f:
-            json.dump(label_map, f, indent=2)
+            json.dump(_to_jsonable(label_map), f, indent=2)
 
     # Feature scaler
     if feature_scaler is not None:
