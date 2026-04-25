@@ -41,6 +41,14 @@ def plot_tsne_embeddings(
     """
     print(f"Computing t-SNE on {embeddings.shape[0]} embeddings...")
 
+    # Subsample if too large to save time
+    if embeddings.shape[0] > 5000:
+        print("Dataset too large for fast t-SNE. Subsampling 5000 points randomly...")
+        np.random.seed(42)
+        indices = np.random.choice(embeddings.shape[0], 5000, replace=False)
+        embeddings = embeddings[indices]
+        labels = labels[indices]
+
     # Reduce dimensionality
     tsne = TSNE(
         n_components=2,
