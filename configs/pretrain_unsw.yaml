@@ -1,0 +1,66 @@
+# ─────────────────────────────────────────────────────────────────────
+# UNSW IoT Device Identification — Pre-training Configuration
+# Phase 1: Masked Feature Modeling (ET-BERT style)
+# ─────────────────────────────────────────────────────────────────────
+base:
+  # Data
+  data_dir: ../dataset
+  min_flows_per_device: 100
+
+  # Windowing
+  window_size: 10
+  stride: 5
+
+  # Model architecture (Transformer Encoder)
+  model_type: transformer
+  d_model: 128
+  nhead: 4
+  num_layers: 4
+  dropout: 0.15
+  mask_ratio: 0.15
+
+  # Training
+  mode: pretrain
+  batch_size: 64
+  num_epochs: 20
+  lr: 1e-3
+
+  # Features from UNSW-IoTraffic flows
+  features:
+    - srcNumPackets
+    - dstNumPackets
+    - srcPayloadSize
+    - dstPayloadSize
+    - srcAvgPayloadSize
+    - dstAvgPayloadSize
+    - srcMaxPayloadSize
+    - dstMaxPayloadSize
+    - srcStdDevPayloadSize
+    - dstStdDevPayloadSize
+    - flowDuration
+    - srcAvgInterarrivalTime
+    - dstAvgInterarrivalTime
+    - avgInterarrivalTime
+    - srcStdDevInterarrivalTime
+    - dstStdDevInterarrivalTime
+    - stdDevInterarrivalTime
+
+runs:
+  - name: pretrain_mlm_base
+    experiment_id: pretrain_mlm_base
+
+  - name: pretrain_mlm_mask20
+    experiment_id: pretrain_mlm_mask20
+    overrides:
+      mask_ratio: 0.20
+
+  - name: pretrain_mlm_d256
+    experiment_id: pretrain_mlm_d256
+    overrides:
+      d_model: 256
+      nhead: 8
+
+  - name: pretrain_mlm_layers6
+    experiment_id: pretrain_mlm_layers6
+    overrides:
+      num_layers: 6

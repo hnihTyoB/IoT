@@ -1,0 +1,82 @@
+# ─────────────────────────────────────────────────────────────────────
+# UNSW IoT Device Identification — Fine-tuning Configuration
+# Phase 3: Supervised Classification (with pre-trained backbone)
+# ─────────────────────────────────────────────────────────────────────
+base:
+  # Data
+  data_dir: ../dataset
+  min_flows_per_device: 100
+
+  # Windowing
+  window_size: 10
+  stride: 5
+
+  # Model architecture
+  model_type: transformer
+  d_model: 128
+  nhead: 4
+  num_layers: 4
+  dropout: 0.15
+
+  # Fine-tuning
+  mode: finetune
+  batch_size: 64
+  num_epochs: 30
+  lr: 1e-4
+  freeze_encoder: false
+  train_ratio: 0.8  # Train/Val split ratio
+
+  # Pre-trained weights source
+  pretrain_experiment_id: null  # Set to load contrastive/MLM encoder weights
+
+  # Features
+  features:
+    - srcNumPackets
+    - dstNumPackets
+    - srcPayloadSize
+    - dstPayloadSize
+    - srcAvgPayloadSize
+    - dstAvgPayloadSize
+    - srcMaxPayloadSize
+    - dstMaxPayloadSize
+    - srcStdDevPayloadSize
+    - dstStdDevPayloadSize
+    - flowDuration
+    - srcAvgInterarrivalTime
+    - dstAvgInterarrivalTime
+    - avgInterarrivalTime
+    - srcStdDevInterarrivalTime
+    - dstStdDevInterarrivalTime
+    - stdDevInterarrivalTime
+
+runs:
+  # Baseline: train from scratch (no pre-training)
+  - name: finetune_scratch
+    experiment_id: finetune_scratch
+
+  # Fine-tune from MLM pre-trained encoder
+  - name: finetune_from_mlm
+    experiment_id: finetune_from_mlm
+    overrides:
+      pretrain_experiment_id: pretrain_mlm_base
+
+  # Fine-tune from contrastive pre-trained encoder
+  - name: finetune_from_contrastive
+    experiment_id: finetune_from_contrastive
+    overrides:
+      pretrain_experiment_id: contrastive_ntxent_base
+
+  # Fine-tune with frozen encoder (only train classifier head)
+  - name: finetune_frozen_encoder
+    experiment_id: finetune_frozen_encoder
+    overrides:
+      pretrain_experiment_id: contrastive_ntxent_base
+      freeze_encoder: true
+      lr: 1e-3
+
+  # Higher capacity model
+  - name: finetune_d256
+    experiment_id: finetune_d256
+    overrides:
+      d_model: 256
+      nhead: 8

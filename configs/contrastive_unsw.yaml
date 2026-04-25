@@ -1,0 +1,70 @@
+# ─────────────────────────────────────────────────────────────────────
+# UNSW IoT Device Identification — Contrastive Learning Configuration
+# Phase 2: Self-Supervised Contrastive Learning (AOC-IDS style)
+# ─────────────────────────────────────────────────────────────────────
+base:
+  # Data
+  data_dir: ../dataset
+  min_flows_per_device: 100
+
+  # Windowing
+  window_size: 10
+  stride: 5
+  num_pairs_per_device: 500
+
+  # Model architecture
+  model_type: transformer
+  d_model: 128
+  nhead: 4
+  num_layers: 4
+  dropout: 0.15
+
+  # Contrastive learning
+  mode: contrastive
+  loss_type: ntxent          # Options: ntxent, triplet, crc
+  temperature: 0.1
+  batch_size: 64
+  num_epochs: 30
+  lr: 5e-4
+
+  # Optional: load pre-trained encoder from Phase 1
+  pretrain_experiment_id: null  # Set to "pretrain_mlm_base" to warm-start
+
+  # Features
+  features:
+    - srcNumPackets
+    - dstNumPackets
+    - srcPayloadSize
+    - dstPayloadSize
+    - srcAvgPayloadSize
+    - dstAvgPayloadSize
+    - srcMaxPayloadSize
+    - dstMaxPayloadSize
+    - srcStdDevPayloadSize
+    - dstStdDevPayloadSize
+    - flowDuration
+    - srcAvgInterarrivalTime
+    - dstAvgInterarrivalTime
+    - avgInterarrivalTime
+    - srcStdDevInterarrivalTime
+    - dstStdDevInterarrivalTime
+    - stdDevInterarrivalTime
+
+runs:
+  - name: contrastive_ntxent_base
+    experiment_id: contrastive_ntxent_base
+
+  - name: contrastive_crc_base
+    experiment_id: contrastive_crc_base
+    overrides:
+      loss_type: crc
+
+  - name: contrastive_triplet_base
+    experiment_id: contrastive_triplet_base
+    overrides:
+      loss_type: triplet
+
+  - name: contrastive_ntxent_warm
+    experiment_id: contrastive_ntxent_warm
+    overrides:
+      pretrain_experiment_id: pretrain_mlm_base
