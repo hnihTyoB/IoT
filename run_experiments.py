@@ -425,12 +425,14 @@ def main():
         overrides = run.get("overrides", {})
         run_cfg = deep_merge(base, overrides)
         run_cfg["experiment_id"] = run.get("experiment_id", name)
+        exp_id = run_cfg["experiment_id"]
 
         mode = run_cfg.get("mode", "finetune")
-        print(f"\n{'─'*70}")
-        print(f"  [{i}/{len(runs)}] {name} (mode={mode})")
-        print(f"{'─'*70}")
+        print("-" * 70)
+        print(f"  [{i}/{len(runs)}] {exp_id} (mode={mode})")
+        print("-" * 70)
 
+        # ─── Run Experiment ───
         runner = runners.get(mode)
         if runner is None:
             print(f"  ⚠ Unknown mode '{mode}', skipping.")
@@ -438,6 +440,15 @@ def main():
 
         summary = runner(run_cfg)
         results.append(summary)
+
+        # ─── Auto-Sync to Google Drive on Colab ───
+        import os
+        if os.path.exists("/content/drive/MyDrive/"):
+            try:
+                print(f"  [Auto-Sync] Backing up {exp_id} to Google Drive...")
+                os.system(f"cp -r /content/IoT/experiments/{exp_id} /content/drive/MyDrive/experiments/")
+            except Exception as e:
+                print(f"  [Auto-Sync] Backup failed: {e}")
 
     print(f"\n{'='*70}")
     print("  ALL EXPERIMENTS COMPLETE")
