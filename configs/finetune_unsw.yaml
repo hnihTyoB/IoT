@@ -50,31 +50,7 @@ base:
     - stdDevInterarrivalTime
 
 runs:
-  # Baseline: train from scratch (no pre-training)
-  - name: finetune_scratch
-    experiment_id: finetune_scratch
-
-  # Fine-tune from MLM pre-trained encoder
-  - name: finetune_from_mlm
-    experiment_id: finetune_from_mlm
-    overrides:
-      pretrain_experiment_id: pretrain_mlm_base
-
-  # Fine-tune from contrastive pre-trained encoder
-  - name: finetune_from_contrastive
-    experiment_id: finetune_from_contrastive
-    overrides:
-      pretrain_experiment_id: contrastive_ntxent_base
-
-  # Fine-tune with frozen encoder (only train classifier head)
-  - name: finetune_frozen_encoder
-    experiment_id: finetune_frozen_encoder
-    overrides:
-      pretrain_experiment_id: contrastive_ntxent_base
-      freeze_encoder: true
-      lr: 1e-3
-
-  # Higher capacity model
+  # Final model using the best pre-trained backbone
   - name: finetune_d256
     experiment_id: finetune_d256
     overrides:

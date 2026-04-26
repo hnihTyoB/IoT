@@ -51,24 +51,6 @@ base:
     - stdDevInterarrivalTime
 
 runs:
-  - name: contrastive_ntxent_base
-    experiment_id: contrastive_ntxent_base
-
-  - name: contrastive_crc_base
-    experiment_id: contrastive_crc_base
-    overrides:
-      loss_type: crc
-
-  - name: contrastive_triplet_base
-    experiment_id: contrastive_triplet_base
-    overrides:
-      loss_type: triplet
-
-  - name: contrastive_ntxent_warm
-    experiment_id: contrastive_ntxent_warm
-    overrides:
-      pretrain_experiment_id: pretrain_mlm_base
-
   - name: contrastive_ntxent_d256
     experiment_id: contrastive_ntxent_d256
     overrides:
