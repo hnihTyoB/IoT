@@ -68,3 +68,10 @@ runs:
     experiment_id: contrastive_ntxent_warm
     overrides:
       pretrain_experiment_id: pretrain_mlm_base
+
+  - name: contrastive_ntxent_d256
+    experiment_id: contrastive_ntxent_d256
+    overrides:
+      d_model: 256
+      nhead: 8
+      pretrain_experiment_id: pretrain_mlm_d256
