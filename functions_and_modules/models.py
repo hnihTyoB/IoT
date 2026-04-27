@@ -1,19 +1,3 @@
-"""
-Transformer Encoder for IoT Device Identification
-===================================================
-Adapted from bandwidth-estimation's TransformerClassifier with:
-  - Sinusoidal Positional Encoding for flow sequence ordering
-  - Masked Attention Pooling for variable-length sequences
-  - Separate encoder backbone that outputs embeddings (for contrastive learning)
-  - Classification head (for fine-tuning)
-  - Masked Feature Modeling head (for ET-BERT-style pre-training)
-
-Architecture Reference:
-  - ET-BERT: Transformer Encoder backbone
-  - bandwidth-estimation: TransformerClassifier structure
-  - AOC-IDS: Embedding extraction for contrastive learning
-"""
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

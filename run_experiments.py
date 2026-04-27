@@ -266,6 +266,43 @@ def run_contrastive(cfg: dict) -> dict:
     return {"experiment_id": exp_id, "output_dir": str(out_dir), "mode": "contrastive"}
 
 
+def calculate_and_save_centroids(model, dataloader, out_dir, device):
+    """Tính toán và lưu Centroids ngay sau khi training xong."""
+    model.eval()
+    centroids_sum = {}
+    centroids_count = {}
+    
+    print(f"\n🎯 Đang tự động tạo bản đồ hành vi (Centroids) cho {len(dataloader.dataset.label_map)} thiết bị...")
+    with torch.no_grad():
+        for batch in tqdm(dataloader, desc="Calculating centroids"):
+            x = batch["features"].to(device)
+            y = batch["labels"].to(device)
+            
+            # Lấy embedding từ encoder thông qua hàm get_embedding (Pooling trung bình)
+            # Dùng thẳng encoder(x).mean(dim=1) vì chúng ta biết cấu trúc model
+            embeddings = model.encoder(x).mean(dim=1) 
+            
+            for i in range(len(y)):
+                label = y[i].item()
+                if label not in centroids_sum:
+                    centroids_sum[label] = torch.zeros_like(embeddings[i])
+                    centroids_count[label] = 0
+                centroids_sum[label] += embeddings[i]
+                centroids_count[label] += 1
+                
+    # Tính trung bình và chuyển về tên thiết bị
+    final_centroids = {}
+    inv_label_map = {v: k for k, v in dataloader.dataset.label_map.items()}
+    
+    for label, total_sum in centroids_sum.items():
+        device_name = inv_label_map[label]
+        final_centroids[device_name] = (total_sum / centroids_count[label]).cpu().numpy()
+        
+    save_path = out_dir / "centroids.pt"
+    torch.save(final_centroids, save_path)
+    print(f"✅ Đã lưu bản đồ hành vi tại: {save_path}")
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Phase 3: Fine-tuning (Supervised Classification)
 # ──────────────────────────────────────────────────────────────────────────────
