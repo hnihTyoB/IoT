@@ -51,9 +51,26 @@ base:
 
 runs:
   # Final model using the best pre-trained backbone
-  - name: finetune_d256
-    experiment_id: finetune_d256
+#  - name: finetune_d256
+#    experiment_id: finetune_d256
+#    overrides:
+#      d_model: 256
+#      nhead: 8
+#      pretrain_experiment_id: contrastive_ntxent_d256
+
+  - name: finetune_robust
+    experiment_id: finetune_robust
     overrides:
-      d_model: 256
-      nhead: 8
-      pretrain_experiment_id: contrastive_ntxent_d256
+      d_model: 128
+      nhead: 4
+      dropout: 0.25
+      pretrain_experiment_id: contrastive_robust
+
+  - name: finetune_robust_frozen
+    experiment_id: finetune_robust_frozen
+    overrides:
+      d_model: 128
+      nhead: 4
+      dropout: 0.25
+      freeze_encoder: true
+      pretrain_experiment_id: contrastive_robust

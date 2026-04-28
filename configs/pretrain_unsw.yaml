@@ -46,21 +46,30 @@ base:
     - stdDevInterarrivalTime
 
 runs:
-  - name: pretrain_mlm_base
-    experiment_id: pretrain_mlm_base
+#  - name: pretrain_mlm_base
+#    experiment_id: pretrain_mlm_base
+#
+#  - name: pretrain_mlm_mask20
+#    experiment_id: pretrain_mlm_mask20
+#    overrides:
+#      mask_ratio: 0.20
+#
+#  - name: pretrain_mlm_d256
+#    experiment_id: pretrain_mlm_d256
+#    overrides:
+#      d_model: 256
+#      nhead: 8
+#
+#  - name: pretrain_mlm_layers6
+#    experiment_id: pretrain_mlm_layers6
+#    overrides:
+#      num_layers: 6
 
-  - name: pretrain_mlm_mask20
-    experiment_id: pretrain_mlm_mask20
+  - name: pretrain_mlm_robust
+    experiment_id: pretrain_mlm_robust
     overrides:
-      mask_ratio: 0.20
-
-  - name: pretrain_mlm_d256
-    experiment_id: pretrain_mlm_d256
-    overrides:
-      d_model: 256
-      nhead: 8
-
-  - name: pretrain_mlm_layers6
-    experiment_id: pretrain_mlm_layers6
-    overrides:
-      num_layers: 6
+      d_model: 128
+      nhead: 4
+      dropout: 0.25
+      mask_ratio: 0.30
+      num_epochs: 30

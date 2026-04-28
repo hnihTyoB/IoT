@@ -51,9 +51,18 @@ base:
     - stdDevInterarrivalTime
 
 runs:
-  - name: contrastive_ntxent_d256
-    experiment_id: contrastive_ntxent_d256
+#  - name: contrastive_ntxent_d256
+#    experiment_id: contrastive_ntxent_d256
+#    overrides:
+#      d_model: 256
+#      nhead: 8
+#      pretrain_experiment_id: pretrain_mlm_d256
+
+  - name: contrastive_robust
+    experiment_id: contrastive_robust
     overrides:
-      d_model: 256
-      nhead: 8
-      pretrain_experiment_id: pretrain_mlm_d256
+      d_model: 128
+      nhead: 4
+      dropout: 0.25
+      num_pairs_per_device: 1000
+      pretrain_experiment_id: pretrain_mlm_robust
