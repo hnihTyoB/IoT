@@ -422,6 +422,12 @@ def run_finetune(cfg: dict) -> dict:
         label_map=label_map,
     )
 
+    # Calculate and save behavioral centroids for anomaly detection
+    from torch.utils.data import DataLoader
+    val_loader = DataLoader(val_ds, batch_size=cfg.get("batch_size", 64), shuffle=False)
+    print(f"\n[Post-Training] Generating behavioral centroids for {exp_id}...")
+    calculate_and_save_centroids(model, val_loader, out_dir, device)
+
     return {
         "experiment_id": exp_id,
         "output_dir": str(out_dir),

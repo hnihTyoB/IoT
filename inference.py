@@ -13,6 +13,7 @@ from functions_and_modules.models import IoTDeviceClassifier
 from functions_and_modules.dataset import UNSW_NUMERIC_FEATURES
 
 warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 THRESHOLD_DIST = 0.12
 
 class IoTInferenceEngine:
@@ -81,16 +82,21 @@ class IoTInferenceEngine:
             conf, pred_idx = conf.item(), pred_idx.item()
             pred_name = self.inv_label_map.get(pred_idx, "Unknown")
 
-            # Lấy vector đặc trưng (Embedding)
-            embedding = self.model.encoder(input_tensor).mean(dim=0).cpu().numpy()
+            # Lấy vector đặc trưng (Embedding) - Encoder đã tự động Pooling rồi
+            emb_tensor = self.model.encoder(input_tensor) # Kết quả là (1, 128)
+            embedding = emb_tensor[0].cpu().numpy() # Lấy vector (128,)
             
             # Tính khoảng cách hành vi
-            dist = 0.0
-            is_unknown = False
+            dist = 999.0
+            is_unknown = True 
+            
             if self.centroids and pred_name in self.centroids:
-                dist = cosine(embedding, self.centroids[pred_name])
-                if dist > THRESHOLD_DIST:
-                    is_unknown = True
+                v_emb = embedding.flatten()
+                v_centroid = np.asarray(self.centroids[pred_name]).flatten()
+                dist = float(cosine(v_emb, v_centroid))
+                is_unknown = (dist > THRESHOLD_DIST)
+            else:
+                is_unknown = True # Nếu không có centroid, mặc định là lạ
 
             if conf < 0.85 or is_unknown:
                 return {"device": "UNKNOWN DEVICE", "confidence": conf, "distance": dist, "status": "CẢNH BÁO: Thiết bị lạ!"}
@@ -103,9 +109,9 @@ if __name__ == "__main__":
 
     BASE_DIR = Path(__file__).resolve().parent
     
-    BEST_EXP = BASE_DIR / "experiments" / "finetune_d256"
+    BEST_EXP = BASE_DIR / "experiments" / "finetune_robust_frozen"
     if not BEST_EXP.exists():
-        BEST_EXP = BASE_DIR.parent / "experiments" / "finetune_d256"
+        BEST_EXP = BASE_DIR.parent / "experiments" / "finetune_robust_frozen"
     if not BEST_EXP.exists():
         print(f"Error: Không tìm thấy thư mục mô hình tại {BEST_EXP}")
     else:
