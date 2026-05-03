@@ -173,6 +173,47 @@ class IoTTransformerEncoder(nn.Module):
 
 
 # ────────────────────────────────────────────────────────────────────────────────
+# Projection Head (SimCLR-style, learned from IOT-DETECTOR)
+# ────────────────────────────────────────────────────────────────────────────────
+class ProjectionHead(nn.Module):
+    """
+    Projection Head for Contrastive Learning (SimCLR / IOT-DETECTOR style).
+
+    Maps encoder representations (d_model) to a lower-dimensional projection
+    space (proj_dim) for contrastive loss computation. This separation allows
+    the encoder to learn general-purpose representations while the projection
+    head absorbs contrastive-specific distortions.
+
+    After contrastive training, the projection head is DISCARDED — only the
+    encoder weights are kept for downstream fine-tuning.
+
+    Reference: Chen et al., "A Simple Framework for Contrastive Learning" (SimCLR)
+    """
+
+    def __init__(self, d_model: int = 128, proj_dim: int = 64, dropout: float = 0.1):
+        super().__init__()
+        self.projection = nn.Sequential(
+            nn.Linear(d_model, d_model),
+            nn.GELU(),
+            nn.LayerNorm(d_model),
+            nn.Dropout(dropout),
+            nn.Linear(d_model, proj_dim),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Parameters
+        ----------
+        x : (B, d_model) — encoder output (pooled embedding)
+
+        Returns
+        -------
+        z : (B, proj_dim) — projected embedding for contrastive loss
+        """
+        return self.projection(x)
+
+
+# ────────────────────────────────────────────────────────────────────────────────
 # IoT Device Classifier (Fine-tuning head)
 # ────────────────────────────────────────────────────────────────────────────────
 class IoTDeviceClassifier(nn.Module):

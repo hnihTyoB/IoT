@@ -267,10 +267,13 @@ def run_contrastive(cfg: dict) -> dict:
 
 
 def calculate_and_save_centroids(model, dataloader, out_dir, device):
-    """Tính toán và lưu Centroids ngay sau khi training xong."""
+    """Tính toán Centroids + Per-device Distance Stats cho Adaptive Threshold."""
+    from scipy.spatial.distance import cosine as cosine_dist
+    
     model.eval()
     centroids_sum = {}
     centroids_count = {}
+    all_embeddings_by_label = {}  # Lưu tất cả embeddings theo label
     
     print(f"\n🎯 Đang tự động tạo bản đồ hành vi (Centroids) cho {len(dataloader.dataset.label_map)} thiết bị...")
     with torch.no_grad():
@@ -278,29 +281,61 @@ def calculate_and_save_centroids(model, dataloader, out_dir, device):
             x = batch["features"].to(device)
             y = batch["labels"].to(device)
             
-            # Lấy embedding từ encoder thông qua hàm get_embedding (Pooling trung bình)
-            # Dùng thẳng encoder(x).mean(dim=1) vì chúng ta biết cấu trúc model
-            embeddings = model.encoder(x).mean(dim=1) 
+            # Lấy embedding từ encoder (Attention Pooling)
+            embeddings = model.encoder(x)
             
             for i in range(len(y)):
                 label = y[i].item()
                 if label not in centroids_sum:
                     centroids_sum[label] = torch.zeros_like(embeddings[i])
                     centroids_count[label] = 0
+                    all_embeddings_by_label[label] = []
                 centroids_sum[label] += embeddings[i]
                 centroids_count[label] += 1
+                all_embeddings_by_label[label].append(embeddings[i].cpu().numpy())
                 
-    # Tính trung bình và chuyển về tên thiết bị
+    # Tính trung bình centroid
     final_centroids = {}
     inv_label_map = {v: k for k, v in dataloader.dataset.label_map.items()}
     
     for label, total_sum in centroids_sum.items():
         device_name = inv_label_map[label]
         final_centroids[device_name] = (total_sum / centroids_count[label]).cpu().numpy()
+    
+    # Tính per-device distance stats (mean + std) cho adaptive threshold
+    device_dist_stats = {}
+    for label, emb_list in all_embeddings_by_label.items():
+        device_name = inv_label_map[label]
+        centroid = final_centroids[device_name]
         
+        distances = []
+        for emb in emb_list:
+            d = cosine_dist(emb.flatten(), centroid.flatten())
+            if not np.isnan(d):
+                distances.append(d)
+        
+        if distances:
+            mean_d = float(np.mean(distances))
+            std_d = float(np.std(distances))
+            device_dist_stats[device_name] = {
+                "mean": mean_d,
+                "std": std_d,
+                "threshold": mean_d + 2.0 * std_d,  # Adaptive: mean + 2σ
+                "n_samples": len(distances),
+            }
+            print(f"  📊 {device_name:30s} | mean_dist={mean_d:.4f} | std={std_d:.4f} | threshold={mean_d + 2*std_d:.4f} | n={len(distances)}")
+    
+    # Lưu centroids
     save_path = out_dir / "centroids.pt"
     torch.save(final_centroids, save_path)
     print(f"✅ Đã lưu bản đồ hành vi tại: {save_path}")
+    
+    # Lưu per-device stats
+    stats_path = out_dir / "device_dist_stats.json"
+    import json
+    with open(stats_path, "w") as f:
+        json.dump(device_dist_stats, f, indent=2)
+    print(f"✅ Đã lưu thống kê khoảng cách per-device tại: {stats_path}")
 
 
 # ──────────────────────────────────────────────────────────────────────────────

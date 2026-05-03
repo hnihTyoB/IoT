@@ -43,6 +43,7 @@ from .models import (
     IoTTransformerEncoder,
     IoTDeviceClassifier,
     MaskedFeatureModeling,
+    ProjectionHead,
     iot_collate_fn,
     iot_contrastive_collate_fn,
 )
@@ -158,16 +159,27 @@ def train_contrastive(
     temperature: float = 0.1,
     loss_type: Literal["ntxent", "triplet", "crc"] = "ntxent",
     device: str = "cpu",
+    proj_dim: int = 64,
 ) -> Tuple[IoTTransformerEncoder, List[Dict[str, float]]]:
     """
-    Contrastive Learning phase (AOC-IDS style).
+    Contrastive Learning phase (AOC-IDS style) with ProjectionHead.
 
     Trains the encoder to produce embeddings where same-device flows
     cluster together and different-device flows are pushed apart.
 
+    Uses a ProjectionHead (SimCLR-style) to map encoder outputs to a
+    lower-dimensional space for contrastive loss. After training, the
+    projection head is discarded — only the encoder weights are kept.
+
     Uses the IoTContrastiveDataset which provides (anchor, positive, negative) triplets.
     """
     encoder.to(device)
+
+    # Create ProjectionHead (SimCLR-style, learned from IOT-DETECTOR)
+    projection_head = ProjectionHead(
+        d_model=encoder.d_model, proj_dim=proj_dim
+    ).to(device)
+    print(f"  [ProjectionHead] {encoder.d_model}D → {proj_dim}D (discarded after training)")
 
     train_loader = DataLoader(
         train_ds, batch_size=batch_size, shuffle=True,
@@ -188,7 +200,11 @@ def train_contrastive(
     else:
         raise ValueError(f"Unknown loss_type: {loss_type}")
 
-    optimizer = torch.optim.AdamW(encoder.parameters(), lr=lr, weight_decay=1e-4)
+    # Optimize both encoder and projection head
+    optimizer = torch.optim.AdamW(
+        list(encoder.parameters()) + list(projection_head.parameters()),
+        lr=lr, weight_decay=1e-4,
+    )
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
         optimizer, T_max=num_epochs, eta_min=lr * 0.01
     )
@@ -200,6 +216,7 @@ def train_contrastive(
     for epoch in range(1, num_epochs + 1):
         # ── Train ──
         encoder.train()
+        projection_head.train()
         train_loss_sum, train_count = 0.0, 0
 
         pbar = tqdm(train_loader, desc=f"[Contrastive] Epoch {epoch}/{num_epochs}", leave=False)
@@ -211,10 +228,10 @@ def train_contrastive(
 
             optimizer.zero_grad()
 
-            # Get embeddings
-            anchor_emb = encoder(anchor)
-            positive_emb = encoder(positive)
-            negative_emb = encoder(negative)
+            # Get embeddings from encoder, then project for contrastive loss
+            anchor_emb = projection_head(encoder(anchor))
+            positive_emb = projection_head(encoder(positive))
+            negative_emb = projection_head(encoder(negative))
 
             if loss_type == "crc":
                 # CRC uses all embeddings + labels
@@ -238,6 +255,7 @@ def train_contrastive(
 
         # ── Validate ──
         encoder.eval()
+        projection_head.eval()
         val_loss_sum, val_count = 0.0, 0
 
         with torch.no_grad():
@@ -247,9 +265,9 @@ def train_contrastive(
                 negative = negative.to(device)
                 labels = labels.to(device)
 
-                anchor_emb = encoder(anchor)
-                positive_emb = encoder(positive)
-                negative_emb = encoder(negative)
+                anchor_emb = projection_head(encoder(anchor))
+                positive_emb = projection_head(encoder(positive))
+                negative_emb = projection_head(encoder(negative))
 
                 if loss_type == "crc":
                     all_emb = torch.cat([anchor_emb, positive_emb, negative_emb], dim=0)

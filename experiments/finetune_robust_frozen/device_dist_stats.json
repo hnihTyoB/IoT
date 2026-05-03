@@ -1,0 +1,158 @@
+{
+  "AmazonEcho": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "AugustDoorBell": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "AwairAirQuality": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "BelkinCamera": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "BelkinWemoMotionSensor": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "BelkinWemoSwitch": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "CanaryCamera": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "HPPrinter": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "HelloBarbie": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "LiFXBulb": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "NestDropCam": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "NestProtect": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "NetatmoWeatherStation": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "NetatmoWelcome": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "PhilipsHue": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "PixStarPhotoFrame": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "RingDoorBell": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "SamsungCamera": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "SamsungSmartThings": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "TPLinkCamera": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "TPLinkSmartPlug": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "TribySpeaker": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "WithingsBabyMonitor": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "WithingsSleepSensor": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "WithingsSmartScale": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  },
+  "iHome": {
+    "mean": 0.05,
+    "std": 0.03,
+    "threshold": 0.11,
+    "n_samples": 0
+  }
+}
