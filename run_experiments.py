@@ -266,7 +266,7 @@ def run_contrastive(cfg: dict) -> dict:
     return {"experiment_id": exp_id, "output_dir": str(out_dir), "mode": "contrastive"}
 
 
-def calculate_and_save_centroids(model, dataloader, out_dir, device):
+def calculate_and_save_centroids(model, dataloader, out_dir, device, label_map):
     """Tính toán Centroids + Per-device Distance Stats cho Adaptive Threshold."""
     from scipy.spatial.distance import cosine as cosine_dist
     
@@ -275,7 +275,7 @@ def calculate_and_save_centroids(model, dataloader, out_dir, device):
     centroids_count = {}
     all_embeddings_by_label = {}  # Lưu tất cả embeddings theo label
     
-    print(f"\n🎯 Đang tự động tạo bản đồ hành vi (Centroids) cho {len(dataloader.dataset.label_map)} thiết bị...")
+    print(f"\n🎯 Đang tự động tạo bản đồ hành vi (Centroids) cho {len(label_map)} thiết bị...")
     with torch.no_grad():
         for batch in tqdm(dataloader, desc="Calculating centroids"):
             x = batch["features"].to(device)
@@ -296,7 +296,7 @@ def calculate_and_save_centroids(model, dataloader, out_dir, device):
                 
     # Tính trung bình centroid
     final_centroids = {}
-    inv_label_map = {v: k for k, v in dataloader.dataset.label_map.items()}
+    inv_label_map = {v: k for k, v in label_map.items()}
     
     for label, total_sum in centroids_sum.items():
         device_name = inv_label_map[label]
@@ -461,7 +461,7 @@ def run_finetune(cfg: dict) -> dict:
     from torch.utils.data import DataLoader
     val_loader = DataLoader(val_ds, batch_size=cfg.get("batch_size", 64), shuffle=False)
     print(f"\n[Post-Training] Generating behavioral centroids for {exp_id}...")
-    calculate_and_save_centroids(model, val_loader, out_dir, device)
+    calculate_and_save_centroids(model, val_loader, out_dir, device, label_map)
 
     return {
         "experiment_id": exp_id,
