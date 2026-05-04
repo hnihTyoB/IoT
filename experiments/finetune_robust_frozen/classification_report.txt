@@ -4,31 +4,31 @@ CLASSIFICATION REPORT — IoT Device Identification
 
             AmazonEcho       1.00      1.00      1.00      9830
         AugustDoorBell       1.00      1.00      1.00     45290
-       AwairAirQuality       0.98      0.92      0.95       175
-          BelkinCamera       0.88      0.89      0.89      2605
+       AwairAirQuality       0.97      0.89      0.93       175
+          BelkinCamera       0.89      0.87      0.88      2605
 BelkinWemoMotionSensor       0.97      0.90      0.94     27208
       BelkinWemoSwitch       0.90      0.98      0.94     19621
           CanaryCamera       1.00      1.00      1.00       263
              HPPrinter       0.97      0.99      0.98     23784
-           HelloBarbie       1.00      1.00      1.00         5
-              LiFXBulb       0.99      0.99      0.99      4080
-           NestDropCam       0.98      0.96      0.97        83
+           HelloBarbie       0.83      1.00      0.91         5
+              LiFXBulb       0.98      1.00      0.99      4080
+           NestDropCam       0.97      0.90      0.94        83
            NestProtect       1.00      1.00      1.00     10277
  NetatmoWeatherStation       1.00      1.00      1.00      3154
-        NetatmoWelcome       0.99      0.96      0.97     12638
+        NetatmoWelcome       0.99      0.97      0.98     12638
             PhilipsHue       1.00      1.00      1.00     12083
-     PixStarPhotoFrame       0.94      0.96      0.95       613
-          RingDoorBell       1.00      1.00      1.00        43
-         SamsungCamera       0.97      0.97      0.97     15195
-    SamsungSmartThings       0.99      0.97      0.98      1715
+     PixStarPhotoFrame       0.95      0.96      0.95       613
+          RingDoorBell       1.00      0.98      0.99        43
+         SamsungCamera       0.97      0.98      0.97     15195
+    SamsungSmartThings       0.99      0.98      0.98      1715
           TPLinkCamera       0.95      0.98      0.97      1919
        TPLinkSmartPlug       1.00      1.00      1.00       511
           TribySpeaker       1.00      0.99      0.99      2065
-   WithingsBabyMonitor       0.96      1.00      0.98       448
-   WithingsSleepSensor       1.00      0.99      0.99      1648
-    WithingsSmartScale       0.95      1.00      0.98        60
+   WithingsBabyMonitor       0.97      0.99      0.98       448
+   WithingsSleepSensor       0.99      0.98      0.99      1648
+    WithingsSmartScale       0.94      1.00      0.97        60
                  iHome       1.00      1.00      1.00      2413
 
               accuracy                           0.98    197726
-             macro avg       0.98      0.98      0.98    197726
+             macro avg       0.97      0.97      0.97    197726
           weighted avg       0.98      0.98      0.98    197726

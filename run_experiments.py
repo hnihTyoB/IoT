@@ -21,6 +21,7 @@ import torch
 import numpy as np
 from pathlib import Path
 from sklearn.model_selection import train_test_split
+from tqdm.auto import tqdm
 
 from functions_and_modules.dataset import (
     IoTFlowWindowDataset,
