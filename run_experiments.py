@@ -278,9 +278,9 @@ def calculate_and_save_centroids(model, dataloader, out_dir, device, label_map):
     
     print(f"\n🎯 Đang tự động tạo bản đồ hành vi (Centroids) cho {len(label_map)} thiết bị...")
     with torch.no_grad():
-        for batch in tqdm(dataloader, desc="Calculating centroids"):
-            x = batch["features"].to(device)
-            y = batch["labels"].to(device)
+        for x, y in tqdm(dataloader, desc="Calculating centroids"):
+            x = x.to(device)
+            y = y.to(device)
             
             # Lấy embedding từ encoder (Attention Pooling)
             embeddings = model.encoder(x)

@@ -4,9 +4,9 @@ CLASSIFICATION REPORT — IoT Device Identification
 
             AmazonEcho       1.00      1.00      1.00      9830
         AugustDoorBell       1.00      1.00      1.00     45290
-       AwairAirQuality       0.97      0.89      0.93       175
-          BelkinCamera       0.89      0.87      0.88      2605
-BelkinWemoMotionSensor       0.97      0.90      0.94     27208
+       AwairAirQuality       0.97      0.88      0.92       175
+          BelkinCamera       0.88      0.87      0.88      2605
+BelkinWemoMotionSensor       0.97      0.91      0.94     27208
       BelkinWemoSwitch       0.90      0.98      0.94     19621
           CanaryCamera       1.00      1.00      1.00       263
              HPPrinter       0.97      0.99      0.98     23784
@@ -20,12 +20,12 @@ BelkinWemoMotionSensor       0.97      0.90      0.94     27208
      PixStarPhotoFrame       0.95      0.96      0.95       613
           RingDoorBell       1.00      0.98      0.99        43
          SamsungCamera       0.97      0.98      0.97     15195
-    SamsungSmartThings       0.99      0.98      0.98      1715
+    SamsungSmartThings       0.98      0.98      0.98      1715
           TPLinkCamera       0.95      0.98      0.97      1919
        TPLinkSmartPlug       1.00      1.00      1.00       511
-          TribySpeaker       1.00      0.99      0.99      2065
+          TribySpeaker       1.00      0.99      1.00      2065
    WithingsBabyMonitor       0.97      0.99      0.98       448
-   WithingsSleepSensor       0.99      0.98      0.99      1648
+   WithingsSleepSensor       1.00      0.98      0.99      1648
     WithingsSmartScale       0.94      1.00      0.97        60
                  iHome       1.00      1.00      1.00      2413
 
