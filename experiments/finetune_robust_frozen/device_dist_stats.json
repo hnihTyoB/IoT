@@ -1,158 +1,158 @@
 {
   "AmazonEcho": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.03760345280170441,
+    "std": 0.05943824350833893,
+    "threshold": 0.15647993981838226,
+    "n_samples": 9830
   },
   "AugustDoorBell": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.016917357221245766,
+    "std": 0.032853610813617706,
+    "threshold": 0.08262457884848118,
+    "n_samples": 45290
   },
   "AwairAirQuality": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.07248243689537048,
+    "std": 0.07719344645738602,
+    "threshold": 0.22686932981014252,
+    "n_samples": 175
   },
   "BelkinCamera": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.07538626343011856,
+    "std": 0.07113602012395859,
+    "threshold": 0.21765830367803574,
+    "n_samples": 2605
   },
   "BelkinWemoMotionSensor": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.09138398617506027,
+    "std": 0.11136683076620102,
+    "threshold": 0.3141176477074623,
+    "n_samples": 27208
   },
   "BelkinWemoSwitch": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.0631752461194992,
+    "std": 0.0667203962802887,
+    "threshold": 0.1966160386800766,
+    "n_samples": 19621
   },
   "CanaryCamera": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.00691214157268405,
+    "std": 0.005216044839471579,
+    "threshold": 0.017344231251627207,
+    "n_samples": 263
   },
   "HPPrinter": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.05944545939564705,
+    "std": 0.07345893979072571,
+    "threshold": 0.20636333897709846,
+    "n_samples": 23784
   },
   "HelloBarbie": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.013845765963196754,
+    "std": 0.007512576412409544,
+    "threshold": 0.028870918788015842,
+    "n_samples": 5
   },
   "LiFXBulb": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.03923149034380913,
+    "std": 0.06364498287439346,
+    "threshold": 0.16652145609259605,
+    "n_samples": 4080
   },
   "NestDropCam": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.08505994826555252,
+    "std": 0.09310954809188843,
+    "threshold": 0.2712790444493294,
+    "n_samples": 83
   },
   "NestProtect": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.006922400556504726,
+    "std": 0.02117576077580452,
+    "threshold": 0.049273922108113766,
+    "n_samples": 10277
   },
   "NetatmoWeatherStation": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.03433455526828766,
+    "std": 0.04772612452507019,
+    "threshold": 0.12978680431842804,
+    "n_samples": 3154
   },
   "NetatmoWelcome": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.05253317952156067,
+    "std": 0.08148699998855591,
+    "threshold": 0.21550717949867249,
+    "n_samples": 12638
   },
   "PhilipsHue": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.025783579796552658,
+    "std": 0.04165344685316086,
+    "threshold": 0.10909047350287437,
+    "n_samples": 12083
   },
   "PixStarPhotoFrame": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.10234440863132477,
+    "std": 0.08328653126955032,
+    "threshold": 0.2689174711704254,
+    "n_samples": 613
   },
   "RingDoorBell": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.029775533825159073,
+    "std": 0.02464139088988304,
+    "threshold": 0.07905831560492516,
+    "n_samples": 43
   },
   "SamsungCamera": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.07579139620065689,
+    "std": 0.1296379417181015,
+    "threshold": 0.3350672796368599,
+    "n_samples": 15195
   },
   "SamsungSmartThings": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.053330376744270325,
+    "std": 0.08967195451259613,
+    "threshold": 0.23267428576946259,
+    "n_samples": 1715
   },
   "TPLinkCamera": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.03960256278514862,
+    "std": 0.05670817568898201,
+    "threshold": 0.15301891416311264,
+    "n_samples": 1919
   },
   "TPLinkSmartPlug": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.025782059878110886,
+    "std": 0.023890545591711998,
+    "threshold": 0.07356315106153488,
+    "n_samples": 511
   },
   "TribySpeaker": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.028338951990008354,
+    "std": 0.08062660694122314,
+    "threshold": 0.18959216587245464,
+    "n_samples": 2065
   },
   "WithingsBabyMonitor": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.05435529723763466,
+    "std": 0.0479285903275013,
+    "threshold": 0.15021247789263725,
+    "n_samples": 448
   },
   "WithingsSleepSensor": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.06575310975313187,
+    "std": 0.07070913910865784,
+    "threshold": 0.20717138797044754,
+    "n_samples": 1648
   },
   "WithingsSmartScale": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.027789955958724022,
+    "std": 0.033028725534677505,
+    "threshold": 0.09384740702807903,
+    "n_samples": 60
   },
   "iHome": {
-    "mean": 0.05,
-    "std": 0.03,
-    "threshold": 0.11,
-    "n_samples": 0
+    "mean": 0.00447069900110364,
+    "std": 0.010920794680714607,
+    "threshold": 0.026312288362532854,
+    "n_samples": 2413
   }
 }
