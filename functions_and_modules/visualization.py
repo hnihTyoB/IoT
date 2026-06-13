@@ -1,12 +1,3 @@
-"""
-Visualization & Analysis Tools for IoT Device Identification
-==============================================================
-  - t-SNE embedding visualization (separability analysis)
-  - Training curve plots
-  - Confusion matrix heatmap
-  - Per-device embedding analysis
-"""
-
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
@@ -30,15 +21,6 @@ def plot_tsne_embeddings(
     perplexity: int = 30,
     figsize: tuple = (14, 10),
 ) -> None:
-    """
-    Visualize device embeddings using t-SNE.
-
-    This is the key analysis to demonstrate that the Transformer + SSL model
-    learns separable behavioral embeddings for different IoT devices.
-
-    Even devices using the same protocol (e.g., NTP) should form distinct
-    clusters based on their unique traffic patterns (packet size, timing, etc.).
-    """
     print(f"Computing t-SNE on {embeddings.shape[0]} embeddings...")
 
     # Subsample if too large to save time

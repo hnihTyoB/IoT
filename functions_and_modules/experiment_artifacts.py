@@ -1,8 +1,3 @@
-"""
-Experiment Artifacts — Save/Load experiment results.
-Adapted from bandwidth-estimation's experiment_artifacts.py
-"""
-
 import numpy as np
 import json
 import yaml

@@ -1,15 +1,3 @@
-"""
-UNSW-IoTraffic Flow Sequence Dataset
-=====================================
-Reads per-device CSV flow files, groups flows into fixed-length windows,
-and returns (features, device_label) pairs for Transformer-based models.
-
-Adapted from bandwidth-estimation's FlowSequenceDataset with:
-  - Device label extraction from filenames
-  - Fixed-length windowing (sliding window) instead of per-client grouping
-  - Numeric feature selection matching UNSW-IoTraffic CSV columns
-"""
-
 import torch
 from torch.utils.data import Dataset
 import pandas as pd
@@ -62,16 +50,6 @@ def load_unsw_flows(
     feature_names: Optional[List[str]] = None,
     min_flows_per_device: int = 100,
 ) -> Tuple[pd.DataFrame, Dict[str, int]]:
-    """
-    Load all UNSW-IoTraffic CSV flow files from a directory.
-    
-    Returns
-    -------
-    df : pd.DataFrame
-        Combined dataframe with 'device_name' and 'device_label' columns.
-    label_map : dict
-        Mapping from device name to integer label.
-    """
     if feature_names is None:
         feature_names = UNSW_NUMERIC_FEATURES
 
@@ -127,26 +105,6 @@ def load_unsw_flows(
 
 
 class IoTFlowWindowDataset(Dataset):
-    """
-    Sliding-window dataset over IoT flow sequences.
-
-    Each sample is a window of `window_size` consecutive flows from the same
-    device, labeled with the device's integer ID.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Must contain feature columns + 'device_name' + 'device_label'.
-    feature_names : list of str
-        Numeric feature column names.
-    window_size : int
-        Number of consecutive flows per sample.
-    stride : int
-        Step between windows (1 = max overlap, window_size = no overlap).
-    feature_scaler : StandardScaler or None
-        If None, fits a new scaler on this data.
-    """
-
     def __init__(
         self,
         df: pd.DataFrame,
@@ -201,18 +159,6 @@ class IoTFlowWindowDataset(Dataset):
 
 
 class IoTContrastiveDataset(Dataset):
-    """
-    Contrastive Learning dataset for IoT device identification.
-
-    For each anchor window, returns:
-      - anchor: flow window from device A
-      - positive: different flow window from the SAME device A
-      - negative: flow window from a DIFFERENT device B
-
-    This directly implements the Contrastive Learning paradigm from AOC-IDS,
-    adapted to use flow windows instead of raw features.
-    """
-
     def __init__(
         self,
         df: pd.DataFrame,

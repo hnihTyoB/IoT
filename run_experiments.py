@@ -1,20 +1,3 @@
-"""
-run_experiments.py — Main Entry Point for IoT Device Identification
-====================================================================
-Orchestrates the full training pipeline:
-
-  Phase 1 (pretrain):     Masked Feature Modeling (ET-BERT style)
-  Phase 2 (contrastive):  Self-Supervised Contrastive Learning (AOC-IDS style)
-  Phase 3 (finetune):     Supervised Device Classification
-
-Usage:
-  python run_experiments.py --config configs/pretrain_unsw.yaml
-  python run_experiments.py --config configs/contrastive_unsw.yaml
-  python run_experiments.py --config configs/finetune_unsw.yaml
-
-Adapted from bandwidth-estimation's run_experiments.py
-"""
-
 import argparse
 import yaml
 import torch

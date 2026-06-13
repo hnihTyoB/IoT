@@ -1,13 +1,3 @@
-"""
-IoT Device Identification — Inference Engine (v2.0)
-=====================================================
-Cải tiến so với v1.0:
-  1. Per-device Adaptive Threshold (thay vì cố định 0.12)
-  2. Temperature Scaling (hiệu chỉnh Softmax overconfident)
-  3. Output format cải tiến (distance là chỉ số chính)
-  4. ProjectionHead integration (SimCLR-style, learned from IOT-DETECTOR)
-"""
-
 from scipy.spatial.distance import cosine
 import torch
 import pandas as pd
@@ -27,7 +17,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # Fallback threshold khi không có per-device stats
 FALLBACK_THRESHOLD = 0.12
-# Temperature cho Softmax calibration (> 1.0 = "khiêm tốn" hơn)
+# Temperature cho Softmax calibration
 TEMPERATURE = 2.0
 
 
@@ -65,7 +55,7 @@ class IoTInferenceEngine:
         centroid_path = self.exp_dir / "centroids.pt"
         self.centroids = torch.load(centroid_path, weights_only=False) if centroid_path.exists() else None
 
-        # 5. Load per-device distance stats (CẢI TIẾN MỚI)
+        # 5. Load per-device distance stats
         stats_path = self.exp_dir / "device_dist_stats.json"
         if stats_path.exists():
             with open(stats_path, "r") as f:

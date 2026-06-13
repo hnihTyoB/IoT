@@ -1,26 +1,3 @@
-"""
-Training & Validation Loops for IoT Device Identification
-===========================================================
-Three training modes:
-
-1. Pretrain (ET-BERT style): Masked Feature Modeling
-   - No labels needed
-   - Transformer learns to reconstruct masked flow features
-   - Output: pre-trained encoder weights
-
-2. Contrastive (AOC-IDS style): Self-Supervised Contrastive Learning
-   - Uses device labels to form positive/negative pairs
-   - Transformer learns behavioral embeddings
-   - Output: encoder that produces separable embeddings
-
-3. Finetune: Supervised Classification
-   - Uses pre-trained encoder + classification head
-   - Standard cross-entropy training
-   - Output: full classifier model
-
-Adapted from bandwidth-estimation's training_validation_loop.py
-"""
-
 import copy
 import math
 from typing import Tuple, List, Dict, Literal, Optional, Any
@@ -62,13 +39,6 @@ def pretrain_masked(
     lr: float = 1e-3,
     device: str = "cpu",
 ) -> Tuple[MaskedFeatureModeling, List[Dict[str, float]]]:
-    """
-    Pre-train using Masked Feature Modeling (ET-BERT-style).
-    
-    The model learns to reconstruct masked flow features from context.
-    This teaches the Transformer to understand IoT traffic behavioral patterns
-    without any device labels.
-    """
     model.to(device)
     train_loader = DataLoader(
         train_ds, batch_size=batch_size, shuffle=True,
@@ -161,18 +131,6 @@ def train_contrastive(
     device: str = "cpu",
     proj_dim: int = 64,
 ) -> Tuple[IoTTransformerEncoder, List[Dict[str, float]]]:
-    """
-    Contrastive Learning phase (AOC-IDS style) with ProjectionHead.
-
-    Trains the encoder to produce embeddings where same-device flows
-    cluster together and different-device flows are pushed apart.
-
-    Uses a ProjectionHead (SimCLR-style) to map encoder outputs to a
-    lower-dimensional space for contrastive loss. After training, the
-    projection head is discarded — only the encoder weights are kept.
-
-    Uses the IoTContrastiveDataset which provides (anchor, positive, negative) triplets.
-    """
     encoder.to(device)
 
     # Create ProjectionHead (SimCLR-style, learned from IOT-DETECTOR)
@@ -317,12 +275,6 @@ def finetune_classifier(
     device: str = "cpu",
     freeze_encoder: bool = False,
 ) -> Tuple[IoTDeviceClassifier, Dict[str, Any], List[Dict[str, float]]]:
-    """
-    Fine-tune the full classifier (encoder + classification head).
-
-    If freeze_encoder=True, only the classification head is trained.
-    Uses pre-trained encoder weights from Phase 1/2.
-    """
     model.to(device)
 
     if freeze_encoder:

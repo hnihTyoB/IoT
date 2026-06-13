@@ -1,55 +1,14 @@
-"""
-Contrastive Learning Losses for IoT Device Identification
-==========================================================
-Adapted from AOC-IDS (Infocom 2024):
-  - CRC Loss (Contrastive Representation Concentration)
-  - NT-Xent Loss (Normalized Temperature-scaled Cross-Entropy)
-  - Triplet Loss
-
-These losses teach the Transformer encoder to produce embeddings where:
-  - Same-device flow windows cluster together
-  - Different-device flow windows are pushed apart
-
-This is the "linh hồn" (soul) of the SSL approach — it enables device
-identification without explicit spoofing labels.
-"""
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 
 class CRCLoss(nn.Module):
-    """
-    Contrastive Representation Concentration Loss.
-    
-    Adapted from AOC-IDS's CRC Loss (improved from InfoNCE).
-    Instead of summing negative similarities per-row (InfoNCE),
-    CRC sums ALL negative pairs globally — providing stronger repulsion.
-    
-    For IoT device identification:
-      - "Normal" class → flows from the anchor device
-      - "Abnormal" class → flows from all other devices
-    
-    This makes same-device embeddings cluster tightly while pushing
-    different-device embeddings far apart.
-    """
-
     def __init__(self, temperature: float = 0.1):
         super().__init__()
         self.temperature = temperature
 
     def forward(self, features: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
-        """
-        Parameters
-        ----------
-        features : (B, D) — L2-normalized embeddings
-        labels : (B,) — device labels (integer)
-
-        Returns
-        -------
-        loss : scalar
-        """
         features = F.normalize(features, p=2, dim=1)
         batch_size = features.shape[0]
         device = features.device
@@ -94,13 +53,6 @@ class CRCLoss(nn.Module):
 
 
 class NTXentLoss(nn.Module):
-    """
-    Normalized Temperature-scaled Cross-Entropy Loss (NT-Xent).
-    
-    Standard contrastive loss for self-supervised learning.
-    Used with positive/negative pairs from IoTContrastiveDataset.
-    """
-
     def __init__(self, temperature: float = 0.5):
         super().__init__()
         self.temperature = temperature
@@ -111,17 +63,6 @@ class NTXentLoss(nn.Module):
         positive: torch.Tensor,
         negative: torch.Tensor,
     ) -> torch.Tensor:
-        """
-        Parameters
-        ----------
-        anchor : (B, D) — anchor embeddings
-        positive : (B, D) — positive (same device) embeddings
-        negative : (B, D) — negative (different device) embeddings
-
-        Returns
-        -------
-        loss : scalar
-        """
         anchor = F.normalize(anchor, p=2, dim=1)
         positive = F.normalize(positive, p=2, dim=1)
         negative = F.normalize(negative, p=2, dim=1)
@@ -141,11 +82,6 @@ class NTXentLoss(nn.Module):
 
 
 class TripletLoss(nn.Module):
-    """
-    Triplet margin loss with hard margin.
-    Simpler alternative to CRC/NT-Xent for contrastive learning.
-    """
-
     def __init__(self, margin: float = 1.0):
         super().__init__()
         self.loss_fn = nn.TripletMarginLoss(margin=margin, p=2)
@@ -163,23 +99,6 @@ class TripletLoss(nn.Module):
 
 
 class CombinedSSLLoss(nn.Module):
-    """
-    Combined Self-Supervised Loss for IoT Device Identification.
-
-    Combines:
-      1. Masked Feature Reconstruction (ET-BERT style) — learn behavioral patterns
-      2. Contrastive Loss (AOC-IDS style) — learn device separability
-
-    Parameters
-    ----------
-    alpha : float
-        Weight for reconstruction loss (default 0.3)
-    beta : float
-        Weight for contrastive loss (default 0.7)
-    temperature : float
-        Temperature for contrastive loss
-    """
-
     def __init__(
         self,
         alpha: float = 0.3,

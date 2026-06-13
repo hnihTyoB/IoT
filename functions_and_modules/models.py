@@ -46,16 +46,6 @@ class MaskedAttentionPooling(nn.Module):
             )
 
     def forward(self, feats: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
-        """
-        Parameters
-        ----------
-        feats : (B, T, D)
-        mask  : (B, T) — True = PAD (to ignore)
-
-        Returns
-        -------
-        pooled : (B, D)
-        """
         scores = self.score_proj(feats).squeeze(-1)
         scores.masked_fill_(mask, float("-inf"))
         attn = F.softmax(scores, dim=-1)
@@ -67,17 +57,6 @@ class MaskedAttentionPooling(nn.Module):
 # IoT Transformer Encoder (Backbone)
 # ────────────────────────────────────────────────────────────────────────────────
 class IoTTransformerEncoder(nn.Module):
-    """
-    Transformer Encoder backbone for IoT flow sequences.
-
-    Takes a batch of flow windows (B, T, input_dim) and produces:
-      - Sequence of hidden states (B, T, d_model)  — for MLM/seq2seq tasks
-      - Pooled embedding vector (B, d_model)        — for contrastive/classification
-
-    This is the "xương sống" (backbone) of the system, adapted from ET-BERT's
-    Transformer Encoder with Sinusoidal Positional Encoding.
-    """
-
     def __init__(
         self,
         input_dim: int,
@@ -135,20 +114,6 @@ class IoTTransformerEncoder(nn.Module):
         lengths: Optional[torch.Tensor] = None,
         return_sequence: bool = False,
     ):
-        """
-        Parameters
-        ----------
-        x : (B, T, input_dim) — batch of flow windows
-        lengths : (B,) — actual lengths (if None, assumes all T)
-        return_sequence : bool — if True, return (B, T, d_model) instead of pooled
-
-        Returns
-        -------
-        If return_sequence:
-            hidden_states : (B, T, d_model)
-        Else:
-            embedding : (B, d_model) — pooled representation
-        """
         B, T, _ = x.shape
 
         if lengths is None:
@@ -176,20 +141,6 @@ class IoTTransformerEncoder(nn.Module):
 # Projection Head (SimCLR-style, learned from IOT-DETECTOR)
 # ────────────────────────────────────────────────────────────────────────────────
 class ProjectionHead(nn.Module):
-    """
-    Projection Head for Contrastive Learning (SimCLR / IOT-DETECTOR style).
-
-    Maps encoder representations (d_model) to a lower-dimensional projection
-    space (proj_dim) for contrastive loss computation. This separation allows
-    the encoder to learn general-purpose representations while the projection
-    head absorbs contrastive-specific distortions.
-
-    After contrastive training, the projection head is DISCARDED — only the
-    encoder weights are kept for downstream fine-tuning.
-
-    Reference: Chen et al., "A Simple Framework for Contrastive Learning" (SimCLR)
-    """
-
     def __init__(self, d_model: int = 128, proj_dim: int = 64, dropout: float = 0.1):
         super().__init__()
         self.projection = nn.Sequential(
@@ -201,15 +152,6 @@ class ProjectionHead(nn.Module):
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Parameters
-        ----------
-        x : (B, d_model) — encoder output (pooled embedding)
-
-        Returns
-        -------
-        z : (B, proj_dim) — projected embedding for contrastive loss
-        """
         return self.projection(x)
 
 
@@ -217,11 +159,6 @@ class ProjectionHead(nn.Module):
 # IoT Device Classifier (Fine-tuning head)
 # ────────────────────────────────────────────────────────────────────────────────
 class IoTDeviceClassifier(nn.Module):
-    """
-    Full model: Transformer Encoder + Classification head.
-    Used during fine-tuning phase to classify IoT devices.
-    """
-
     def __init__(
         self,
         input_dim: int,
@@ -250,16 +187,6 @@ class IoTDeviceClassifier(nn.Module):
         )
 
     def forward(self, x: torch.Tensor, lengths: Optional[torch.Tensor] = None):
-        """
-        Parameters
-        ----------
-        x : (B, T, input_dim)
-        lengths : (B,) or None
-
-        Returns
-        -------
-        logits : (B, num_classes)
-        """
         embedding = self.encoder(x, lengths, return_sequence=False)
         logits = self.classifier(embedding)
         return logits
@@ -273,16 +200,6 @@ class IoTDeviceClassifier(nn.Module):
 # Masked Feature Modeling Head (ET-BERT-style Pre-training)
 # ────────────────────────────────────────────────────────────────────────────────
 class MaskedFeatureModeling(nn.Module):
-    """
-    ET-BERT-style pre-training: Mask random features/flows in a window
-    and train the Transformer to reconstruct them.
-
-    Instead of masking bytes in raw packets (ET-BERT original), we mask
-    entire feature values in CSV flow records. The model learns to predict
-    srcAvgPayloadSize from surrounding flow context — understanding deep
-    behavioral patterns without any labels.
-    """
-
     def __init__(
         self,
         input_dim: int,
@@ -318,17 +235,6 @@ class MaskedFeatureModeling(nn.Module):
         self.mask_token = nn.Parameter(torch.randn(input_dim) * 0.02)
 
     def create_mask(self, x: torch.Tensor) -> Tuple:
-        """
-        Create random masks for flow features.
-
-        Strategy: For each flow in the window, randomly mask `mask_ratio`
-        of the features (set them to the learned mask token).
-
-        Returns
-        -------
-        x_masked : (B, T, input_dim) — input with masked features
-        mask : (B, T, input_dim) — boolean mask (True = masked)
-        """
         B, T, F = x.shape
         mask = torch.rand(B, T, F, device=x.device) < self.mask_ratio
 
@@ -338,16 +244,6 @@ class MaskedFeatureModeling(nn.Module):
         return x_masked, mask
 
     def forward(self, x: torch.Tensor, lengths: Optional[torch.Tensor] = None):
-        """
-        Parameters
-        ----------
-        x : (B, T, input_dim) — original (unmasked) flow window
-
-        Returns
-        -------
-        loss : scalar — MSE reconstruction loss on masked positions
-        reconstructed : (B, T, input_dim) — full reconstruction
-        """
         # Create masks and corrupt input
         x_masked, mask = self.create_mask(x)
 
@@ -370,10 +266,6 @@ class MaskedFeatureModeling(nn.Module):
 # Collate function for DataLoader
 # ────────────────────────────────────────────────────────────────────────────────
 def iot_collate_fn(batch):
-    """
-    Collate for IoTFlowWindowDataset.
-    All windows have the same size, so simple stacking works.
-    """
     features, labels = zip(*batch)
     features = torch.stack(features)  # (B, T, F)
     labels = torch.stack(labels)      # (B,)
@@ -381,10 +273,6 @@ def iot_collate_fn(batch):
 
 
 def iot_contrastive_collate_fn(batch):
-    """
-    Collate for IoTContrastiveDataset.
-    Returns anchors, positives, negatives, labels.
-    """
     anchors, positives, negatives, labels = zip(*batch)
     return (
         torch.stack(anchors),
