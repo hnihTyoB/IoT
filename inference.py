@@ -147,7 +147,6 @@ class IoTInferenceEngine:
 
 
 def format_result(res: Dict) -> str:
-    """Format kết quả inference."""
     lines = []
     lines.append("─" * 55)
     
@@ -167,7 +166,6 @@ def format_result(res: Dict) -> str:
 if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("HỆ THỐNG NHẬN DIỆN THIẾT BỊ IOT - SELF-SUPERVISED LEARNING")
-    print("  📦 v2.0 — Per-device Threshold + Temperature Scaling")
     print("=" * 60)
 
     BASE_DIR = Path(__file__).resolve().parent
